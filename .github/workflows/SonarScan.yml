@@ -1,0 +1,44 @@
+name: SonarCloud Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Build and analyze
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+
+    - name: Cache SonarCloud Scanner
+      uses: actions/cache@v3
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonarcloud-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-sonarcloud-
+
+    - name: Install dependencies
+      run: |
+        ./gradlew install  # or the appropriate command for your build tool
+
+    - name: Run SonarCloud analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        ./gradlew sonarqube \
+          -Dsonar.organization=darshdixit
+          -Dsonar.projectKey=DarshDixit_Sonar-scan
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=$SONAR_TOKEN
