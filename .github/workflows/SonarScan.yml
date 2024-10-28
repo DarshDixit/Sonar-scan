@@ -1,39 +1,20 @@
-name: SonarCloud Scan
-
+name: Build
 on:
   push:
     branches:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
-
 jobs:
-  build:
-    name: Build and analyze
+  sonarcloud:
+    name: SonarCloud
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Cache SonarCloud Scanner
-      uses: actions/cache@v3
-      with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonarcloud-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-sonarcloud-
-
-    - name: Install dependencies
-      run: |
-        ./gradlew install  # or the appropriate command for your build tool
-
-    - name: Run SonarCloud analysis
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        ./gradlew sonarqube \
-          -Dsonar.organization=darshdixit
-          -Dsonar.projectKey=DarshDixit_Sonar-scan
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=$SONAR_TOKEN
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
