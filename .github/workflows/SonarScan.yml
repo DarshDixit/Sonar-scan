@@ -31,7 +31,9 @@ jobs:
           ${{ runner.os }}-sonarcloud-
 
     - name: Install dependencies
-      run: ./gradlew install
+      run: |
+        chmod +x ./gradlew
+        ./gradlew install
 
     - name: Run SonarCloud analysis
       env:
