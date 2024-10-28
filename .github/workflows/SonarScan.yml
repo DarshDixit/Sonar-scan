@@ -30,10 +30,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-sonarcloud-
 
-    - name: Install dependencies
-      run: |
-        chmod +x ./gradlew
-        ./gradlew install
+    - name: Compile Java files
+      run: javac src/**/*.java
 
     - name: Run SonarCloud analysis
       env:
