@@ -35,7 +35,6 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
-        ./gradlew sonarqube \
           -Dsonar.organization=darshdixit \
           -Dsonar.projectKey=DarshDixit_Sonar-scan \
           -Dsonar.host.url=https://sonarcloud.io \
