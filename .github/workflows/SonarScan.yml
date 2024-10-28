@@ -29,16 +29,18 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-sonarcloud-
 
+    - name: Ensure Gradle wrapper is executable
+      run: chmod +x ./gradlew  # Make sure gradlew is executable
+
     - name: Install dependencies
-      run: |
-        ./gradlew install  # or the appropriate command for your build tool
+      run: ./gradlew install  # Run the Gradle install command
 
     - name: Run SonarCloud analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         ./gradlew sonarqube \
-          -Dsonar.organization=darshdixit
-          -Dsonar.projectKey=DarshDixit_Sonar-scan
+          -Dsonar.organization=darshdixit \
+          -Dsonar.projectKey=DarshDixit_Sonar-scan \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.login=$SONAR_TOKEN
