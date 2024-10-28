@@ -31,7 +31,7 @@ jobs:
           ${{ runner.os }}-sonarcloud-
 
     - name: Compile Java files
-      run: find src -name "com/java/*.java"
+      run: javac src/com/java/*.java
 
     - name: Run SonarCloud analysis
       env:
